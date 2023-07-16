@@ -5,12 +5,11 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import PostAuthor from './PostAuthor'
 import { TimeAgo } from './TImeAgo'
 import { ReactionButtons } from './ReactionButtons'
+import { selectPostById } from './postsSlice'
 
 function SinglePostPage() {
   const { postId } = useParams()
-  const post = useSelector((state) =>
-    state.posts.find((post) => post.id === postId)
-  )
+  const post = useSelector((state) => selectPostById(state, postId))
   if (!post) {
     return (
       <section>
