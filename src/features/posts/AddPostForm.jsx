@@ -1,27 +1,30 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { postAdded } from './postsSlice'
-import { nanoid } from '@reduxjs/toolkit'
 
 function AddPostForm() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [userId, setUserId] = useState('')
   const dispatch = useDispatch()
+
+  const users = useSelector((state) => state.users)
 
   const onSavePostClicked = () => {
     if (title && content) {
-      dispatch(
-        postAdded({
-          id: nanoid(),
-          title,
-          content,
-        })
-      )
+      dispatch(postAdded(title, content, userId))
 
       setTitle('')
       setContent('')
     }
   }
+
+  const usersOptions = users.map((user) => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ))
+
   return (
     <section>
       <form>
@@ -42,8 +45,21 @@ function AddPostForm() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
+          <label htmlFor="postAuthor">Author:</label>
+          <select
+            id="postAuthor"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          >
+            <option value=""></option>
+            {usersOptions}
+          </select>
         </fieldset>
-        <button type="button" onClick={onSavePostClicked}>
+        <button
+          type="button"
+          onClick={onSavePostClicked}
+          disabled={!(Boolean(title) && Boolean(content) && Boolean(userId))}
+        >
           Save Post
         </button>
       </form>
