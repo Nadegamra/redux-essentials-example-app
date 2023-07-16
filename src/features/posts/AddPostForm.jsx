@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNewPost } from './postsSlice'
+import { selectAllUsers } from '../users/usersSlice'
 
 function AddPostForm() {
   const [title, setTitle] = useState('')
@@ -10,7 +11,7 @@ function AddPostForm() {
 
   const dispatch = useDispatch()
 
-  const users = useSelector((state) => state.users)
+  const users = useSelector(selectAllUsers)
 
   const canSave =
     [title, content, userId].every(Boolean) && addRequestStatus === 'idle'
