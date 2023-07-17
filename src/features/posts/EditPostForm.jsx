@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
-import { postUpdated, selectPostById } from './postsSlice'
+import { useGetPostQuery, useEditPostMutation } from '../api/apiSlice'
 
 function EditPostForm() {
   const { postId } = useParams()
-  const post = useSelector((state) => selectPostById(state, postId))
-  const dispatch = useDispatch()
   const history = useHistory()
+
+  const { data: post } = useGetPostQuery(postId)
+  const [updatePost, { isLoading }] = useEditPostMutation()
 
   const [title, setTitle] = useState(post.title)
   const [content, setContent] = useState(post.content)
@@ -36,9 +36,11 @@ function EditPostForm() {
       </form>
       <button
         type="button"
-        onClick={() => {
-          dispatch(postUpdated({ id: postId, title, content }))
-          history.push(`/posts/${post.id}`)
+        onClick={async () => {
+          if (title && content) {
+            await updatePost({ id: postId, title, content })
+            history.push(`/posts/${post.id}`)
+          }
         }}
       >
         Save Post
