@@ -40,7 +40,6 @@ const notificationsSlice = createSlice({
       Object.values(state.entities).forEach((notification) => {
         notification.isNew = !notification.read
       })
-      state.sort((a, b) => b.date.localeCompare(a.date))
     })
   },
 })
